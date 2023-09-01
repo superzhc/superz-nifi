@@ -11,6 +11,8 @@ import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnUnscheduled;
 import org.apache.nifi.components.AllowableValue;
 import org.apache.nifi.components.PropertyDescriptor;
+import org.apache.nifi.components.ValidationContext;
+import org.apache.nifi.components.ValidationResult;
 import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.processor.*;
@@ -108,10 +110,28 @@ public class MyProcessorTemplate extends AbstractProcessor {
                 .name(propertyDescriptorName)
                 .expressionLanguageSupported(ExpressionLanguageScope.NONE)
                 // 属性验证
-//                .addValidator(new XPathValidator())
+                // .addValidator(new XPathValidator())
                 .required(false)
                 .dynamic(true)
                 .build();
+    }
+
+    /**
+     * 用户自定义验证规则
+     *
+     * @param validationContext provides a mechanism for obtaining externally
+     *                          managed values, such as property values and supplies convenience methods
+     *                          for operating on those values
+     * @return
+     */
+    @Override
+    protected Collection<ValidationResult> customValidate(ValidationContext validationContext) {
+        final List<ValidationResult> results = new ArrayList<>(super.customValidate(validationContext));
+
+        // 添加验证规则
+        // results.add(new ValidationResult.Builder().subject("XPaths").valid(false).explanation("Exactly one XPath must be set if using destination of " + DESTINATION_CONTENT).build());
+
+        return results;
     }
 
     @OnAdded
@@ -127,19 +147,27 @@ public class MyProcessorTemplate extends AbstractProcessor {
      */
     @OnScheduled
     public void setUp() {
-        System.out.printf("当前Processor触发运行时间：%s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
+        // System.out.printf("当前Processor触发运行时间：%s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
     }
 
     @OnUnscheduled
     public void tearDown() {
-        System.out.printf("当前Processor运行结束时间：%s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
+        // System.out.printf("当前Processor运行结束时间：%s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
     }
 
     @Override
     public void onTrigger(ProcessContext processContext, ProcessSession processSession) throws ProcessException {
         FlowFile flowFile = processSession.get();
 
-        // TODO：打印数据
+        // 获取动态属性
+        for (final Map.Entry<PropertyDescriptor, String> entry : processContext.getProperties().entrySet()) {
+            if (!entry.getKey().isDynamic()) {
+                continue;
+            }
+
+            // do something
+        }
+
         // 读取数据
         try (InputStream in = processSession.read(flowFile)) {
 
