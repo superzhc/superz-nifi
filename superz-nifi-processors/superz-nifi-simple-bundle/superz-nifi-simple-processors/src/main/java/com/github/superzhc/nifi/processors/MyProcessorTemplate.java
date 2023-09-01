@@ -1,8 +1,6 @@
 package com.github.superzhc.nifi.processors;
 
-import org.apache.nifi.annotation.behavior.InputRequirement;
-import org.apache.nifi.annotation.behavior.SideEffectFree;
-import org.apache.nifi.annotation.behavior.SupportsBatching;
+import org.apache.nifi.annotation.behavior.*;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnAdded;
@@ -33,13 +31,20 @@ import java.util.*;
 //@SideEffectFree
 //// 支持批量
 //@SupportsBatching
-// 用于标记这个Processor的标签，可以用于搜索
+// 用于标记这个Processor的标签、关键字，可以用于搜索
 @Tags("sueprz,demo")
 //// 声明允许输入
 //@InputRequirement(InputRequirement.Requirement.INPUT_ALLOWED)
+// 定义输出属性
+@WritesAttributes({
+        @WritesAttribute(attribute = "",description = "")
+        //...
+})
 // Processor详细描述
 @CapabilityDescription("我的第一个自定义Processor")
 public class MyProcessorTemplate extends AbstractProcessor {
+
+    // region===================================Property===============================================================
 
     /*自定义Processor属性*/
     public static final PropertyDescriptor MY_PROPERTY = new PropertyDescriptor.Builder()
@@ -48,9 +53,10 @@ public class MyProcessorTemplate extends AbstractProcessor {
             .expressionLanguageSupported(ExpressionLanguageScope.FLOWFILE_ATTRIBUTES)
             .required(true)
             .defaultValue("")
-            .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+            .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)// 必须要加该参数，不然processor用不了
             .build();
 
+    /* 自定义属性-下拉框选择 */
     // 属性选项值定义
     public static final AllowableValue V1 = new AllowableValue("0", "v1", "option value:value1");
     public static final AllowableValue V2 = new AllowableValue("1", "v2", "option value:value2");
@@ -63,10 +69,18 @@ public class MyProcessorTemplate extends AbstractProcessor {
             .defaultValue(V1.getValue())
             .build();
 
+    // endregion================================Property===============================================================
+
+    // region===================================Relationship===========================================================
+
     /*自定义Processor关系*/
     public static final Relationship SUCCESS = new Relationship.Builder()
             .name("success")
+            .description("")
             .build();
+
+    // endregion================================Relationship===========================================================
+
 
     private List<PropertyDescriptor> descriptors;
     private Set<Relationship> relationships;
@@ -178,4 +192,10 @@ public class MyProcessorTemplate extends AbstractProcessor {
         // 直接将原来的数据给转发出去
         processSession.transfer(flowFile, SUCCESS);
     }
+
+    // region===================================FlowFile===============================================================
+    // endregion================================FlowFile===============================================================
+
+    // region===================================State==================================================================
+    // endregion================================State==================================================================
 }
