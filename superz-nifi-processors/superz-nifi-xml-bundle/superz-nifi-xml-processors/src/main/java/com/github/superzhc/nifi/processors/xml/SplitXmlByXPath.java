@@ -14,6 +14,7 @@ import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.Relationship;
 import org.apache.nifi.processor.exception.ProcessException;
 import org.dom4j.Document;
+import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
@@ -39,6 +40,10 @@ public class SplitXmlByXPath extends AbstractProcessor {
             .name("split")
             .build();
 
+    public static final Relationship REL_ORIGINAL = new Relationship.Builder()
+            .name("original")
+            .build();
+
     @Override
     protected List<PropertyDescriptor> getSupportedPropertyDescriptors() {
         return Collections.unmodifiableList(Arrays.asList(SPLIT_XPATH_EXPRESSION));
@@ -48,6 +53,7 @@ public class SplitXmlByXPath extends AbstractProcessor {
     public Set<Relationship> getRelationships() {
         Set<Relationship> relationships = new HashSet<>();
         relationships.add(REL_SPLIT);
+        relationships.add(REL_ORIGINAL);
         return Collections.unmodifiableSet(relationships);
     }
 
@@ -93,9 +99,9 @@ public class SplitXmlByXPath extends AbstractProcessor {
             final String fragmentIdentifier = UUID.randomUUID().toString();
             for (int i = 0, size = nodes.size(); i < size; i++) {
                 final Node node = nodes.get(i);
-                Document nodeDoc = node.getDocument();
+                Element element=(Element) node;
                 for (Map.Entry<String, String> commonElement : commonElements.entrySet()) {
-                    nodeDoc.addElement(commonElement.getKey()).addText(commonElement.getValue());
+                    element.addElement(commonElement.getKey()).setText(commonElement.getValue());
                 }
 
                 FlowFile split = session.create(ff);
@@ -108,9 +114,12 @@ public class SplitXmlByXPath extends AbstractProcessor {
                 split = session.putAttribute(split, FRAGMENT_INDEX.key(), Integer.toString(i));
                 split = session.putAttribute(split, SEGMENT_ORIGINAL_FILENAME.key(), split.getAttribute(CoreAttributes.FILENAME.key()));
                 split = session.putAttribute(split, FRAGMENT_COUNT.key(), Integer.toString(size));
+                split = session.putAttribute(split, CoreAttributes.MIME_TYPE.key(), "application/xml");
                 session.transfer(split, REL_SPLIT);
             }
 
+            ff = session.putAttribute(ff, CoreAttributes.MIME_TYPE.key(), "application/xml");
+            session.transfer(ff, REL_ORIGINAL);
         } catch (Exception e) {
             throw new ProcessException(e);
         }
