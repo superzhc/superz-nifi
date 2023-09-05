@@ -11,6 +11,7 @@
     <modules>
         <module>superz-nifi-processors</module>
         <module>superz-nifi-controller-services</module>
+        <module>superz-nifi-reporting-task</module>
     </modules>
 
     <properties>
@@ -21,6 +22,21 @@
     </properties>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!--Nifi nar包需要该插件-->
+                <plugin>
+                    <groupId>org.apache.nifi</groupId>
+                    <artifactId>nifi-nar-maven-plugin</artifactId>
+                    <version>1.5.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <enforceDocGeneration>true</enforceDocGeneration>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <!--指定编译版本 -->
             <plugin>

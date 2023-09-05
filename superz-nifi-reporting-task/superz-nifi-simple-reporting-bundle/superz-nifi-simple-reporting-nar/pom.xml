@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.superzhc</groupId>
-        <artifactId>superz-nifi-nlp-bundle</artifactId>
+        <artifactId>superz-nifi-simple-reporting-bundle</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>superz-nifi-nlp-nar</artifactId>
+    <artifactId>superz-nifi-simple-reporting-nar</artifactId>
     <packaging>nar</packaging>
 
     <properties>
@@ -17,6 +17,14 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.superzhc</groupId>
+            <artifactId>superz-nifi-simple-reporting-tasks</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -26,4 +34,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
