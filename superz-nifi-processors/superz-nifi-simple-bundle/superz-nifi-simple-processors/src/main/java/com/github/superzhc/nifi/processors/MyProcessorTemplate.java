@@ -15,10 +15,14 @@ import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.processor.*;
 import org.apache.nifi.processor.exception.ProcessException;
+import org.apache.nifi.processor.io.InputStreamCallback;
+import org.apache.nifi.processor.io.OutputStreamCallback;
+import org.apache.nifi.processor.io.StreamCallback;
 import org.apache.nifi.processor.util.StandardValidators;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -37,7 +41,7 @@ import java.util.*;
 //@InputRequirement(InputRequirement.Requirement.INPUT_ALLOWED)
 // 定义输出属性
 @WritesAttributes({
-        @WritesAttribute(attribute = "",description = "")
+        @WritesAttribute(attribute = "", description = "")
         //...
 })
 // Processor详细描述
@@ -172,6 +176,12 @@ public class MyProcessorTemplate extends AbstractProcessor {
     @Override
     public void onTrigger(ProcessContext processContext, ProcessSession processSession) throws ProcessException {
         FlowFile flowFile = processSession.get();
+        if (null == flowFile) {
+            return;
+        }
+
+        // 获取指定属性值
+        processContext.getProperty(MY_PROPERTY).getValue();
 
         // 获取动态属性
         for (final Map.Entry<PropertyDescriptor, String> entry : processContext.getProperties().entrySet()) {
@@ -182,18 +192,53 @@ public class MyProcessorTemplate extends AbstractProcessor {
             // do something
         }
 
-        // 读取数据
+        // 新增或更新属性
+        flowFile = processSession.putAttribute(flowFile, "k1", "v1");
+
+        /* 读取数据 */
+        // 方式一：
         try (InputStream in = processSession.read(flowFile)) {
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        // 方式二：
+        processSession.read(flowFile, new InputStreamCallback() {
+            @Override
+            public void process(InputStream in) throws IOException {
+                // do something
+            }
+        });
+
+        /* 写数据 */
+        FlowFile newFlowFile = processSession.write(flowFile, new OutputStreamCallback() {
+            @Override
+            public void process(OutputStream out) throws IOException {
+                // do something
+            }
+        });
+
+        /* 读后就写 */
+        FlowFile resultingFlowFile = processSession.write(flowFile, new StreamCallback() {
+            @Override
+            public void process(InputStream in, OutputStream out) throws IOException {
+                // do something
+            }
+        });
+
         // 直接将原来的数据给转发出去
-        processSession.transfer(flowFile, SUCCESS);
+        processSession.transfer(newFlowFile, SUCCESS);
+
+        /* 删除原始FlowFile */
+        processSession.remove(flowFile);
     }
 
     // region===================================FlowFile===============================================================
+    /* 复制 FlowFile */
+    public void clone(ProcessSession session, FlowFile flowFile) {
+        FlowFile cloneFlowFile = session.clone(flowFile);
+    }
     // endregion================================FlowFile===============================================================
 
     // region===================================State==================================================================
