@@ -5,12 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.superzhc</groupId>
-        <artifactId>superz-nifi-ml-bundle</artifactId>
+        <artifactId>superz-nifi-controller-services</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>superz-nifi-ml-nar</artifactId>
-    <packaging>nar</packaging>
+    <artifactId>superz-nifi-jdbi3-bundle</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>superz-nifi-jdbi3</module>
+        <module>superz-nifi-jdbi3-nar</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,20 +22,4 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.github.superzhc</groupId>
-            <artifactId>superz-nifi-ml-processors</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.nifi</groupId>
-                <artifactId>nifi-nar-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

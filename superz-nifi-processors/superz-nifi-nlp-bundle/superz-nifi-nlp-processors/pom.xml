@@ -5,12 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.superzhc</groupId>
-        <artifactId>superz-nifi-ml-bundle</artifactId>
+        <artifactId>superz-nifi-nlp-bundle</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>superz-nifi-ml-nar</artifactId>
-    <packaging>nar</packaging>
+    <artifactId>superz-nifi-nlp-processors</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -20,18 +19,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.superzhc</groupId>
-            <artifactId>superz-nifi-ml-processors</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.apache.nifi</groupId>
+            <artifactId>nifi-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.nifi</groupId>
-                <artifactId>nifi-nar-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

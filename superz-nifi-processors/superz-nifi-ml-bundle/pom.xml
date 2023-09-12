@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>superz-nifi-ml-nar</module>
+        <module>superz-nifi-ml-processors</module>
     </modules>
 
     <properties>

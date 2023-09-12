@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.superzhc</groupId>
-        <artifactId>superz-nifi-ml-bundle</artifactId>
+        <artifactId>superz-nifi-simple-services-bundle</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>superz-nifi-ml-nar</artifactId>
+    <artifactId>superz-nifi-simple-services-nar</artifactId>
     <packaging>nar</packaging>
 
     <properties>
@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.superzhc</groupId>
-            <artifactId>superz-nifi-ml-processors</artifactId>
+            <artifactId>superz-nifi-simple-services</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -34,4 +34,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

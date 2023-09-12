@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>superz-nifi-nlp-nar</module>
+        <module>superz-nifi-nlp-processors</module>
     </modules>
 
     <properties>

@@ -1,5 +1,6 @@
 package com.github.superzhc.nifi.processors;
 
+import com.github.superzhc.nifi.services.MyControllerServiceTemplate;
 import org.apache.nifi.annotation.behavior.*;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
@@ -73,6 +74,14 @@ public class MyProcessorTemplate extends AbstractProcessor {
             .defaultValue(V1.getValue())
             .build();
 
+    /* 服务类型属性 */
+    // 自定义服务类型属性
+    public static final PropertyDescriptor MY_CUSTOM_SERVICE_PROPERTY = new PropertyDescriptor.Builder()
+            .name("custom service")
+            .description("自定义服务")
+            .required(true)
+            .identifiesControllerService(MyControllerServiceTemplate.class)
+            .build();
     // endregion================================Property===============================================================
 
     // region===================================Relationship===========================================================
@@ -182,6 +191,9 @@ public class MyProcessorTemplate extends AbstractProcessor {
 
         // 获取指定属性值
         processContext.getProperty(MY_PROPERTY).getValue();
+
+        // 获取定义的服务
+        MyControllerServiceTemplate myControllerServiceTemplate = processContext.getProperty(MY_CUSTOM_SERVICE_PROPERTY).asControllerService(MyControllerServiceTemplate.class);
 
         // 获取动态属性
         for (final Map.Entry<PropertyDescriptor, String> entry : processContext.getProperties().entrySet()) {

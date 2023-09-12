@@ -11,11 +11,32 @@
 
     <artifactId>superz-nifi-controller-services</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>superz-nifi-simple-services-bundle</module>
+        <module>superz-nifi-jdbi3-bundle</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- The following dependencies are marked provided because they must be provided by the container.  Nars can assume they are there-->
+            <dependency>
+                <groupId>org.apache.nifi</groupId>
+                <artifactId>nifi-api</artifactId>
+                <version>${nifi.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.nifi</groupId>
+                <artifactId>nifi-utils</artifactId>
+                <version>${nifi.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
