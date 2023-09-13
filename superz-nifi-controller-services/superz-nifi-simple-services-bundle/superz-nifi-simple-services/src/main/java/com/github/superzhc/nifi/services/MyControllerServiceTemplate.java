@@ -32,15 +32,8 @@ public class MyControllerServiceTemplate extends AbstractControllerService imple
             .defaultValue("1")
             .build();
 
-    // 计数器
-    private int startCounter;
-
-    private int stopCounter;
-
     @Override
     protected void init(ControllerServiceInitializationContext config) throws InitializationException {
-        startCounter = 0;
-        stopCounter = 0;
     }
 
     @Override
@@ -50,20 +43,10 @@ public class MyControllerServiceTemplate extends AbstractControllerService imple
 
     @OnEnabled
     public void onConfigured(final ConfigurationContext context) {
-        startCounter += 1;
     }
 
     @OnShutdown
     @OnDisabled
     public void cleanup() {
-        stopCounter += 1;
-    }
-
-    public int getStartCounter() {
-        return startCounter;
-    }
-
-    public int getStopCounter() {
-        return stopCounter;
     }
 }

@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.superzhc</groupId>
-        <artifactId>superz-nifi-jdbi3-bundle</artifactId>
+        <artifactId>superz-nifi-db-bundle</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>superz-nifi-jdbi3-api</artifactId>
+    <artifactId>superz-nifi-db-jdbi3-processors</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -32,13 +32,48 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.superzhc</groupId>
+            <artifactId>superz-nifi-jdbi3-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.nifi</groupId>
+            <artifactId>nifi-utils</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.jdbi</groupId>
             <artifactId>jdbi3-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-sqlobject</artifactId>
+        </dependency>
+        <!--<dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-jodatime2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-oracle12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-sqlite</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-postgres</artifactId>
+        </dependency>-->
     </dependencies>
+
 </project>

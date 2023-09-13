@@ -5,10 +5,7 @@ import org.apache.nifi.annotation.behavior.WritesAttribute;
 import org.apache.nifi.annotation.behavior.WritesAttributes;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
-import org.apache.nifi.annotation.lifecycle.OnAdded;
-import org.apache.nifi.annotation.lifecycle.OnRemoved;
-import org.apache.nifi.annotation.lifecycle.OnScheduled;
-import org.apache.nifi.annotation.lifecycle.OnUnscheduled;
+import org.apache.nifi.annotation.lifecycle.*;
 import org.apache.nifi.components.AllowableValue;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.ValidationContext;
@@ -54,6 +51,7 @@ public class MyProcessorTemplate extends AbstractProcessor {
     public static final PropertyDescriptor MY_PROPERTY = new PropertyDescriptor.Builder()
             .name("文本值")
             .description("文本输入")
+            // EL 表达式是否支持设置
             .expressionLanguageSupported(ExpressionLanguageScope.FLOWFILE_ATTRIBUTES)
             .required(true)
             .defaultValue("")
@@ -160,6 +158,8 @@ public class MyProcessorTemplate extends AbstractProcessor {
         return results;
     }
 
+    // region===========================================Lifecycle=======================================================
+
     @OnAdded
     public void addProcessor() {
     }
@@ -169,17 +169,30 @@ public class MyProcessorTemplate extends AbstractProcessor {
     }
 
     /**
+     * 该注解会在 Processor 的每一次定时运行的时候调用，只支持 Processor 和 Reporting Tasks
      * 主要是用于Processor的一些一次性工作，比如初始化连接等。所以，用户应该将资源的初始化工作放在@onScheduled注解修饰的方法中
      */
     @OnScheduled
-    public void setUp() {
+    public void startProcessor(ProcessContext context) {
         // System.out.printf("当前Processor触发运行时间：%s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
     }
 
     @OnUnscheduled
-    public void tearDown() {
+    public void endProcessor(ProcessContext context) {
         // System.out.printf("当前Processor运行结束时间：%s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
     }
+
+    @OnStopped
+    public void stopProcessor(ProcessContext context) {
+    }
+
+    /**
+     * 不支持参数
+     */
+    @OnShutdown
+    public void shutdownProcessor() {
+    }
+    // endregion========================================Lifecycle=======================================================
 
     @Override
     public void onTrigger(ProcessContext processContext, ProcessSession processSession) throws ProcessException {
@@ -188,8 +201,11 @@ public class MyProcessorTemplate extends AbstractProcessor {
             return;
         }
 
-        // 获取指定属性值
-        processContext.getProperty(MY_PROPERTY).getValue();
+        // 获取指定属性值，同时对值进行 EL 表达式的解析操作
+        processContext.getProperty(MY_PROPERTY).evaluateAttributeExpressions(flowFile).getValue();
+
+        // 获取下拉属性的值，直接获取到 allowable 设置的 value，displayName 无法获取到
+        processContext.getProperty(MY_OPTION_PROPERTY).getValue();
 
         // 获取定义的服务
         IMyControllerServiceTemplate myControllerServiceTemplate = processContext.getProperty(MY_CUSTOM_SERVICE_PROPERTY).asControllerService(IMyControllerServiceTemplate.class);

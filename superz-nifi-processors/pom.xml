@@ -13,10 +13,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>superz-nifi-simple-bundle</module>
-        <module>superz-nifi-xml-bundle</module>
-        <module>superz-nifi-html-bundle</module>
         <module>superz-nifi-nlp-bundle</module>
         <module>superz-nifi-ml-bundle</module>
+        <module>superz-nifi-db-bundle</module>
     </modules>
 
     <properties>
