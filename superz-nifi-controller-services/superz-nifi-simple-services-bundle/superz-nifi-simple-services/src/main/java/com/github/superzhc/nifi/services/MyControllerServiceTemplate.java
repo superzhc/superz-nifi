@@ -1,5 +1,6 @@
 package com.github.superzhc.nifi.services;
 
+import com.github.superzhc.nifi.services.api.IMyControllerServiceTemplate;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnDisabled;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 @Tags({"test"})
 @CapabilityDescription("测试自定义服务")
-public class MyControllerServiceTemplate extends AbstractControllerService {
+public class MyControllerServiceTemplate extends AbstractControllerService implements IMyControllerServiceTemplate {
     /* 定义属性 */
     public static final PropertyDescriptor MY_PROPERTY = new PropertyDescriptor.Builder()
             .name("customProperty")

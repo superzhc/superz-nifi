@@ -1,7 +1,8 @@
 package com.github.superzhc.nifi.processors;
 
-import com.github.superzhc.nifi.services.MyControllerServiceTemplate;
-import org.apache.nifi.annotation.behavior.*;
+import com.github.superzhc.nifi.services.api.IMyControllerServiceTemplate;
+import org.apache.nifi.annotation.behavior.WritesAttribute;
+import org.apache.nifi.annotation.behavior.WritesAttributes;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnAdded;
@@ -24,8 +25,6 @@ import org.apache.nifi.processor.util.StandardValidators;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -80,7 +79,7 @@ public class MyProcessorTemplate extends AbstractProcessor {
             .name("custom service")
             .description("自定义服务")
             .required(true)
-            .identifiesControllerService(MyControllerServiceTemplate.class)
+            .identifiesControllerService(IMyControllerServiceTemplate.class)
             .build();
     // endregion================================Property===============================================================
 
@@ -193,7 +192,7 @@ public class MyProcessorTemplate extends AbstractProcessor {
         processContext.getProperty(MY_PROPERTY).getValue();
 
         // 获取定义的服务
-        MyControllerServiceTemplate myControllerServiceTemplate = processContext.getProperty(MY_CUSTOM_SERVICE_PROPERTY).asControllerService(MyControllerServiceTemplate.class);
+        IMyControllerServiceTemplate myControllerServiceTemplate = processContext.getProperty(MY_CUSTOM_SERVICE_PROPERTY).asControllerService(IMyControllerServiceTemplate.class);
 
         // 获取动态属性
         for (final Map.Entry<PropertyDescriptor, String> entry : processContext.getProperties().entrySet()) {

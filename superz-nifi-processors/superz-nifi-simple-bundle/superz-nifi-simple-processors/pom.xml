@@ -40,9 +40,10 @@
             <scope>test</scope>
         </dependency>
 
+        <!--Controller Service 必须引用api，直接引用controller service所在的包，会重复加载服务-->
         <dependency>
             <groupId>com.github.superzhc</groupId>
-            <artifactId>superz-nifi-simple-services</artifactId>
+            <artifactId>superz-nifi-simple-services-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -14,6 +14,7 @@
     <modules>
         <module>superz-nifi-jdbi3</module>
         <module>superz-nifi-jdbi3-nar</module>
+        <module>superz-nifi-jdbi3-api</module>
     </modules>
 
     <properties>

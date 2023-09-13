@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.superzhc</groupId>
-        <artifactId>superz-nifi-ml-bundle</artifactId>
+        <artifactId>superz-nifi-jdbi3-bundle</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>superz-nifi-ml-processors</artifactId>
+    <artifactId>superz-nifi-jdbi3-api</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -23,15 +23,5 @@
             <artifactId>nifi-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.nifi</groupId>
-            <artifactId>nifi-utils</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.nifi</groupId>
-            <artifactId>nifi-mock</artifactId>
-        </dependency>
     </dependencies>
-
 </project>
