@@ -9,8 +9,17 @@ import org.apache.nifi.controller.AbstractControllerService;
 import org.apache.nifi.controller.ConfigurationContext;
 import org.apache.nifi.processor.util.StandardValidators;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.statement.SqlLogger;
+import org.jdbi.v3.core.statement.SqlStatements;
+import org.jdbi.v3.core.statement.StatementContext;
+import org.jdbi.v3.guava.GuavaPlugin;
+import org.jdbi.v3.jodatime2.JodaTimePlugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -45,7 +54,7 @@ public class Jdbi3 extends AbstractControllerService implements Jdbi3Service {
             .addValidator(Validator.VALID)
             .build();
 
-    private volatile Jdbi jdbi;
+    protected volatile Jdbi jdbi;
 
     @Override
     protected List<PropertyDescriptor> getSupportedPropertyDescriptors() {
@@ -74,8 +83,31 @@ public class Jdbi3 extends AbstractControllerService implements Jdbi3Service {
         }
         jdbi = Jdbi.create(url, properties);
 
+        // 配置
+//        jdbi.getConfig(SqlStatements.class)
+
+        // 设置日志
+        jdbi.setSqlLogger(new SqlLogger() {
+            @Override
+            public void logBeforeExecution(StatementContext context) {
+                getLogger().debug("sql {}, parameters {}", context.getRenderedSql(), context.getBinding());
+                // System.out.println("sql " + context.getParsedSql() + ", parameters " + context.getBinding());
+            }
+
+            @Override
+            public void logAfterExecution(StatementContext context) {
+                getLogger().debug(
+                        "sql {}, parameters {}, timeTaken {} ms",
+                        context.getRenderedSql(),
+                        context.getBinding(),
+                        context.getElapsedTime(ChronoUnit.MILLIS));
+            }
+        });
+
         // 插件支持操作
         jdbi.installPlugin(new SqlObjectPlugin());
+        jdbi.installPlugin(new GuavaPlugin());
+        jdbi.installPlugin(new JodaTimePlugin());
     }
 
     @Override
