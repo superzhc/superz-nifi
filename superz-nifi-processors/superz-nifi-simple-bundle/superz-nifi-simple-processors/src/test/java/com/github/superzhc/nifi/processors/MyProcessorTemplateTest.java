@@ -14,11 +14,13 @@ class MyProcessorTemplateTest {
     @Test
     public void test() {
         TestRunner runner = TestRunners.newTestRunner(MyProcessorTemplate.class);
+
         // 设置属性
         runner.setProperty(MyProcessorTemplate.MY_PROPERTY, "");
 
-        // 设置 FlowFile
-        runner.enqueue("");
+        // 创建 FlowFile
+        String content = "";
+        MockFlowFile flowFile = runner.enqueue(content);
 
         // 运行 Processor
         runner.run();

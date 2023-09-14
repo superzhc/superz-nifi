@@ -1,15 +1,22 @@
 package com.github.superzhc.nifi.processors.db.jdbi3;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.superzhc.nifi.services.api.Jdbi3Service;
+import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.Validator;
 import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.processor.AbstractProcessor;
+import org.apache.nifi.processor.ProcessContext;
 import org.apache.nifi.processor.Relationship;
+import org.jdbi.v3.core.Jdbi;
 
 import java.util.*;
 
 public abstract class Jdbi3BaseProcessor extends AbstractProcessor {
+
+    protected static final ObjectMapper MAPPER=new ObjectMapper();
+
     public static final PropertyDescriptor JDBI_SERVICE = new PropertyDescriptor.Builder()
             .name("Jdbi3 实例")
             .required(true)
@@ -23,6 +30,8 @@ public abstract class Jdbi3BaseProcessor extends AbstractProcessor {
     public static final Relationship FAILED = new Relationship.Builder()
             .name("失败")
             .build();
+
+    private volatile Jdbi jdbi;
 
     @Override
     protected List<PropertyDescriptor> getSupportedPropertyDescriptors() {
@@ -73,5 +82,15 @@ public abstract class Jdbi3BaseProcessor extends AbstractProcessor {
 
     public List<Relationship> getCustomRelationships() {
         return null;
+    }
+
+    @OnScheduled
+    public void start(ProcessContext context) {
+        // 待测试，父类使用了 OnScheduled 是否会被调用
+        this.jdbi = context.getProperty(JDBI_SERVICE).asControllerService(Jdbi3Service.class).getJdbi();
+    }
+
+    public Jdbi getJdbi() {
+        return jdbi;
     }
 }
