@@ -5,24 +5,30 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.superzhc</groupId>
-        <artifactId>superz-nifi-processors</artifactId>
+        <artifactId>superz-nifi-ml-bundle</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>superz-nifi-simple-bundle</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>superz-nifi-simple-processors</module>
-        <module>superz-nifi-simple-nar</module>
-        <module>superz-nifi-xml-processors</module>
-        <module>superz-nifi-json-processors</module>
-        <module>superz-nifi-html-processors</module>
-    </modules>
+    <artifactId>superz-nifi-ml-smile-processors</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <smile.version>3.0.1</smile.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.nifi</groupId>
+            <artifactId>nifi-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.haifengl</groupId>
+            <artifactId>smile-core</artifactId>
+            <version>${smile.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

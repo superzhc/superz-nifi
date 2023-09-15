@@ -9,7 +9,7 @@
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>superz-nifi-simple-processors</artifactId>
+    <artifactId>superz-nifi-xml-processors</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -26,17 +26,21 @@
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-utils</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-mock</artifactId>
         </dependency>
 
-        <!--Controller Service 必须引用api，直接引用controller service所在的包，会重复加载服务-->
+        <!--XML相关依赖-->
         <dependency>
-            <groupId>com.github.superzhc</groupId>
-            <artifactId>superz-nifi-simple-services-api</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.2.0</version>
         </dependency>
     </dependencies>
 

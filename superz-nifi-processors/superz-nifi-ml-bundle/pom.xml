@@ -14,6 +14,7 @@
     <modules>
         <module>superz-nifi-ml-nar</module>
         <module>superz-nifi-ml-processors</module>
+        <module>superz-nifi-ml-smile-processors</module>
     </modules>
 
     <properties>

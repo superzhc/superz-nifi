@@ -25,6 +25,21 @@
             <artifactId>superz-nifi-simple-processors</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.superzhc</groupId>
+            <artifactId>superz-nifi-xml-processors</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.superzhc</groupId>
+            <artifactId>superz-nifi-json-processors</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.superzhc</groupId>
+            <artifactId>superz-nifi-html-processors</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

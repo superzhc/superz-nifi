@@ -169,8 +169,9 @@ public class MyProcessorTemplate extends AbstractProcessor {
     }
 
     /**
-     * 该注解会在 Processor 的每一次定时运行的时候调用，只支持 Processor 和 Reporting Tasks
-     * 主要是用于Processor的一些一次性工作，比如初始化连接等。所以，用户应该将资源的初始化工作放在@onScheduled注解修饰的方法中
+     * 主要是用于Processor的一些一次性工作，比如初始化连接等。所以，用户应该将资源的初始化工作放在@OnScheduled注解修饰的方法中
+     *
+     * @OnSchedule 是链式调用的方式，从具体实现类到父类一层一层去调用使用该注解的方法
      */
     @OnScheduled
     public void startProcessor(ProcessContext context) {
