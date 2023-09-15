@@ -67,8 +67,11 @@ public class Jdbi3 extends AbstractControllerService implements Jdbi3Service {
     }
 
     @OnEnabled
-    public void onConfigured(final ConfigurationContext context) {
-        // String driverName = context.getProperty(DRIVER).getValue();
+    public void onConfigured(final ConfigurationContext context) throws Exception {
+        // 需要手动加载驱动，jdbi3 不会自动去查找驱动
+        String driverName = context.getProperty(DRIVER).getValue();
+        Class.forName(driverName);
+
         String url = context.getProperty(URL).getValue();
         String username = context.getProperty(USERNAME).getValue();
         String password = context.getProperty(PASSWORD).getValue();
