@@ -86,7 +86,6 @@ public abstract class Jdbi3BaseProcessor extends AbstractProcessor {
 
     @OnScheduled
     public void start(ProcessContext context) {
-        // 待测试，父类使用了 OnScheduled 是否会被调用
         this.jdbi = context.getProperty(JDBI_SERVICE).asControllerService(Jdbi3Service.class).getJdbi();
     }
 

@@ -46,7 +46,7 @@ public class Jdbi3QueryTable extends Jdbi3BaseProcessor {
         try (Handle handle = getJdbi().open()) {
             List<Map<String, Object>> data = handle.createQuery(SQL_TEMPLATE)
                     .define("table", table)
-                    .define("condition", null)
+                    .define("condition", "")
                     .mapToMap()
                     .list();
 

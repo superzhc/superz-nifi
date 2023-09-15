@@ -1,1 +1,4 @@
 com.github.superzhc.nifi.processors.db.jdbi3.Jdbi3QueryTable
+com.github.superzhc.nifi.processors.db.jdbi3.Jdbi3SqlQuery
+com.github.superzhc.nifi.processors.db.jdbi3.Jdbi3SqlUpdate
+com.github.superzhc.nifi.processors.db.jdbi3.Jdbi3ExecuteSql

@@ -1,7 +1,10 @@
 package com.github.superzhc.nifi.processors.db.jdbi3;
 
 import com.github.superzhc.nifi.services.api.Jdbi3Service;
+import org.apache.nifi.annotation.documentation.CapabilityDescription;
+import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.components.PropertyDescriptor;
+import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.processor.ProcessContext;
 import org.apache.nifi.processor.ProcessSession;
@@ -14,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Tags({"sql", "jdbi3"})
+@CapabilityDescription("对数据库的表进行 DML(insert,update,upsert...) 操作")
 public class Jdbi3SqlUpdate extends Jdbi3BaseProcessor {
 
     public static final PropertyDescriptor SQL = new PropertyDescriptor.Builder()
@@ -21,6 +26,7 @@ public class Jdbi3SqlUpdate extends Jdbi3BaseProcessor {
             .description("支持命名占位符，示例：insert into test(name) values(:name)")
             .required(true)
             .addValidator(StandardValidators.NON_BLANK_VALIDATOR)
+            .expressionLanguageSupported(ExpressionLanguageScope.FLOWFILE_ATTRIBUTES)
             .build();
 
     @Override
@@ -51,16 +57,15 @@ public class Jdbi3SqlUpdate extends Jdbi3BaseProcessor {
             params.put(property.getKey().getName(), value);
         }
 
-        Jdbi3Service jdbi3Service = context.getProperty(JDBI_SERVICE).asControllerService(Jdbi3Service.class);
-        Jdbi jdbi = jdbi3Service.getJdbi();
+        final String sql = context.getProperty(SQL).evaluateAttributeExpressions(flowFile).getValue();
 
-        final String sql = context.getProperty(SQL).getValue();
-
-        jdbi.useHandle(handle -> {
+        getJdbi().useHandle(handle -> {
             handle.createUpdate(sql)
                     .bindMap(params)
                     .execute()
             ;
         });
+
+        session.transfer(flowFile, SUCCESS);
     }
 }

@@ -4,10 +4,12 @@ import com.github.superzhc.nifi.services.api.Jdbi3Service;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.flowfile.FlowFile;
+import org.apache.nifi.flowfile.attributes.CoreAttributes;
 import org.apache.nifi.processor.ProcessContext;
 import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.exception.ProcessException;
 import org.apache.nifi.processor.util.StandardValidators;
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 import java.util.Arrays;
@@ -52,18 +54,27 @@ public class Jdbi3SqlQuery extends Jdbi3BaseProcessor {
             params.putAll(attributes);
         }
 
-        Jdbi3Service jdbi3Service = context.getProperty(JDBI_SERVICE).asControllerService(Jdbi3Service.class);
-        Jdbi jdbi = jdbi3Service.getJdbi();
+        // 4. FlowFile 的内容是否需要进行解析？
 
         final String sql = context.getProperty(SQL).getValue();
 
-        jdbi.withHandle(handle -> {
+        FlowFile newFlowFile = session.create();
+        try (Handle handle = getJdbi().open()) {
             List<Map<String, Object>> data = handle.createQuery(sql)
                     .bindMap(params)
                     .mapToMap()
                     .list();
 
-            return null;
-        });
+            final String content = MAPPER.writeValueAsString(data);
+            session.write(newFlowFile, output -> {
+                output.write(content.getBytes("UTF-8"));
+                output.flush();
+            });
+            session.putAttribute(newFlowFile, CoreAttributes.MIME_TYPE.key(), "application/json");
+            session.transfer(newFlowFile, SUCCESS);
+        } catch (Exception e) {
+            session.putAttribute(newFlowFile, "message", e.getMessage());
+            session.transfer(newFlowFile, FAILED);
+        }
     }
 }
