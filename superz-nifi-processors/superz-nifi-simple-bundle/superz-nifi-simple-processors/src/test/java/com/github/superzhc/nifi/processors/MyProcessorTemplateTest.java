@@ -15,6 +15,9 @@ class MyProcessorTemplateTest {
     public void test() {
         TestRunner runner = TestRunners.newTestRunner(MyProcessorTemplate.class);
 
+        // 设置是否有上游输入
+        runner.setNonLoopConnection(false);
+
         // 设置属性
         runner.setProperty(MyProcessorTemplate.MY_PROPERTY, "");
 

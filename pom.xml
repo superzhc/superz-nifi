@@ -12,6 +12,7 @@
         <module>superz-nifi-processors</module>
         <module>superz-nifi-controller-services</module>
         <module>superz-nifi-reporting-task</module>
+        <module>superz-nifi-usage</module>
     </modules>
 
     <properties>
